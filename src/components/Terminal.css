@@ -1,0 +1,123 @@
+.terminal {
+  width: 100%;
+  height: 100%;
+  padding: 8px 12px;
+  overflow-y: auto;
+  cursor: text;
+  font-family: 'Menlo', 'Monaco', 'SF Mono', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #cccccc;
+}
+
+/* Scrollbar styling */
+.terminal::-webkit-scrollbar {
+  width: 8px;
+}
+
+.terminal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.terminal::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.terminal::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ---- Lines ---- */
+.terminal-line {
+  white-space: pre-wrap;
+  word-break: break-all;
+  min-height: 1.4em;
+}
+
+.terminal-line.error .output-text {
+  color: #ff5f57;
+}
+
+/* ---- Prompt ---- */
+.prompt {
+  white-space: nowrap;
+}
+
+.prompt-user {
+  color: #28c840;
+  font-weight: bold;
+}
+
+.prompt-separator {
+  color: #cccccc;
+}
+
+.prompt-dir {
+  color: #5c9aff;
+  font-weight: bold;
+}
+
+.prompt-dollar {
+  color: #cccccc;
+}
+
+.command-text {
+  color: #ffffff;
+}
+
+/* ---- Output ---- */
+.output-text {
+  color: #cccccc;
+}
+
+.output-text .highlight {
+  color: #28c840;
+  font-weight: bold;
+}
+
+.output-text .accent {
+  color: #5c9aff;
+}
+
+.output-text .warn {
+  color: #ffbd2e;
+}
+
+.output-text .bold {
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.output-text .dim {
+  color: #666;
+}
+
+/* ---- Input ---- */
+.input-line {
+  display: flex;
+  align-items: center;
+}
+
+.input-form {
+  flex: 1;
+  display: flex;
+}
+
+.terminal-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  padding: 0;
+  margin: 0;
+  caret-color: #cccccc;
+}
+
+.terminal-input::selection {
+  background: rgba(255, 255, 255, 0.25);
+}

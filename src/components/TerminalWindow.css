@@ -1,0 +1,109 @@
+.terminal-window {
+  position: absolute;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 22px 70px 4px rgba(0, 0, 0, 0.56),
+    0 0 0 1px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+}
+
+.terminal-window.dragging,
+.terminal-window.resizing {
+  user-select: none;
+}
+
+.terminal-window.dragging .terminal-body,
+.terminal-window.resizing .terminal-body {
+  pointer-events: none;
+}
+
+/* ---- Title Bar ---- */
+.terminal-titlebar {
+  height: 38px;
+  background: linear-gradient(180deg, #3c3c3c 0%, #323232 100%);
+  border-bottom: 1px solid #1a1a1a;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  cursor: grab;
+  flex-shrink: 0;
+}
+
+.terminal-window.dragging .terminal-titlebar {
+  cursor: grabbing;
+}
+
+.traffic-lights {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+
+.traffic-light {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: transparent;
+  transition: color 0.1s;
+}
+
+.traffic-close {
+  background: #ff5f57;
+}
+
+.traffic-minimize {
+  background: #ffbd2e;
+}
+
+.traffic-maximize {
+  background: #28c840;
+}
+
+.traffic-lights:hover .traffic-light {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.terminal-title {
+  flex: 1;
+  text-align: center;
+  color: #999;
+  font-size: 13px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.titlebar-spacer {
+  width: 54px; /* balance the traffic lights */
+  flex-shrink: 0;
+}
+
+/* ---- Body ---- */
+.terminal-body {
+  flex: 1;
+  background: rgba(30, 30, 30, 0.95);
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ---- Resize Handle ---- */
+.resize-handle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+  z-index: 10;
+}
