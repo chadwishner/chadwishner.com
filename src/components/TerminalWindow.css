@@ -8,11 +8,13 @@
     0 22px 70px 4px rgba(0, 0, 0, 0.56),
     0 0 0 1px rgba(0, 0, 0, 0.3);
   z-index: 100;
+  transition: left 0.3s ease, top 0.3s ease, width 0.3s ease, height 0.3s ease, border-radius 0.3s ease;
 }
 
 .terminal-window.dragging,
 .terminal-window.resizing {
   user-select: none;
+  transition: none;
 }
 
 .terminal-window.dragging .terminal-body,
@@ -106,4 +108,28 @@
   height: 16px;
   cursor: nwse-resize;
   z-index: 10;
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 768px) {
+  .terminal-window {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .terminal-titlebar {
+    cursor: default;
+  }
+
+  .traffic-lights {
+    pointer-events: none;
+  }
+
+  .titlebar-spacer {
+    display: none;
+  }
+
+  .terminal-title {
+    text-align: center;
+  }
 }

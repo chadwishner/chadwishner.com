@@ -4,9 +4,15 @@ import './TerminalWindow.css'
 
 const MIN_WIDTH = 400
 const MIN_HEIGHT = 250
+const MOBILE_BREAKPOINT = 768
+
+function isMobile() {
+  return window.innerWidth <= MOBILE_BREAKPOINT
+}
 
 export default function TerminalWindow() {
   const windowRef = useRef(null)
+  const [mobile, setMobile] = useState(isMobile)
   const initialW = 720
   const initialH = 460
   const [pos, setPos] = useState({
@@ -20,6 +26,13 @@ export default function TerminalWindow() {
   const [preMaxState, setPreMaxState] = useState(null)
   const dragOffset = useRef({ x: 0, y: 0 })
   const resizeStart = useRef({ x: 0, y: 0, w: 0, h: 0 })
+
+  // Listen for resize to toggle mobile mode
+  useEffect(() => {
+    const onResize = () => setMobile(isMobile())
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
   // Dragging
   const onTitleBarMouseDown = useCallback(
@@ -105,19 +118,19 @@ export default function TerminalWindow() {
     }
   }, [isMaximized, preMaxState, pos, size])
 
-  const style = isMaximized
+  const style = mobile || isMaximized
     ? { left: 0, top: 0, width: '100%', height: '100%' }
     : { left: pos.x, top: pos.y, width: size.w, height: size.h }
 
   return (
     <div
       ref={windowRef}
-      className={`terminal-window ${isDragging ? 'dragging' : ''} ${isResizing ? 'resizing' : ''}`}
+      className={`terminal-window ${mobile ? 'mobile' : ''} ${isDragging ? 'dragging' : ''} ${isResizing ? 'resizing' : ''}`}
       style={style}
       onClick={(e) => e.stopPropagation()}
     >
       {/* Title Bar */}
-      <div className="terminal-titlebar" onMouseDown={onTitleBarMouseDown}>
+      <div className="terminal-titlebar" onMouseDown={mobile ? undefined : onTitleBarMouseDown}>
         <div className="traffic-lights">
           <button
             className="traffic-light traffic-close"
@@ -164,7 +177,7 @@ export default function TerminalWindow() {
       </div>
 
       {/* Resize Handle */}
-      {!isMaximized && (
+      {!mobile && !isMaximized && (
         <div className="resize-handle" onMouseDown={onResizeMouseDown} />
       )}
     </div>
