@@ -31,8 +31,19 @@
 /* ---- Lines ---- */
 .terminal-line {
   white-space: pre-wrap;
-  word-break: break-all;
+  word-break: break-word;
   min-height: 1.4em;
+}
+
+.bullet-item {
+  display: inline-block;
+  margin-left: 4ch;
+  padding-left: 2ch;
+  text-indent: -2ch;
+}
+
+.bullet-item::before {
+  content: '• ';
 }
 
 .terminal-line.error .output-text {
