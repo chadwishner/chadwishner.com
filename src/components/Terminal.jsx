@@ -3,6 +3,80 @@ import { executeCommand, WELCOME_MESSAGE } from './commands'
 import { useVisitorInfo } from './useVisitorInfo'
 import './Terminal.css'
 
+function CmatrixOverlay({ onDone }) {
+  const canvasRef = useRef(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext('2d')
+    let animId
+    let timeout
+
+    const resize = () => {
+      canvas.width = canvas.parentElement.clientWidth
+      canvas.height = canvas.parentElement.clientHeight
+    }
+    resize()
+
+    const fontSize = 14
+    const cols = Math.floor(canvas.width / fontSize)
+    const drops = Array(cols).fill(1)
+    const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF'
+
+    const draw = () => {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctx.fillStyle = '#0F0'
+      ctx.font = `${fontSize}px monospace`
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars[Math.floor(Math.random() * chars.length)]
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize)
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0
+        }
+        drops[i]++
+      }
+      animId = requestAnimationFrame(draw)
+    }
+    draw()
+
+    // Stop after 5 seconds
+    timeout = setTimeout(() => {
+      cancelAnimationFrame(animId)
+      onDone()
+    }, 5000)
+
+    // Also stop on any keypress
+    const onKey = () => {
+      cancelAnimationFrame(animId)
+      clearTimeout(timeout)
+      onDone()
+    }
+    window.addEventListener('keydown', onKey)
+
+    return () => {
+      cancelAnimationFrame(animId)
+      clearTimeout(timeout)
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [onDone])
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 10,
+      }}
+    />
+  )
+}
+
 export default function Terminal() {
   const visitor = useVisitorInfo()
   const hostname = visitor.ip || 'guest'
@@ -14,6 +88,7 @@ export default function Terminal() {
   const [input, setInput] = useState('')
   const [commandHistory, setCommandHistory] = useState([])
   const [historyIndex, setHistoryIndex] = useState(-1)
+  const [showCmatrix, setShowCmatrix] = useState(false)
   const inputRef = useRef(null)
   const scrollRef = useRef(null)
 
@@ -52,6 +127,28 @@ export default function Terminal() {
 
       if (result.clear) {
         setLines([])
+      } else if (result.action === 'rmrf') {
+        const outputLines = result.output.map((text) => ({
+          type: 'output',
+          text,
+        }))
+        setLines([...newLines, ...outputLines])
+        // Progressively strip away the page HTML
+        setTimeout(() => {
+          document.title = ''
+          const root = document.getElementById('root')
+          if (root) {
+            root.style.transition = 'opacity 1.5s ease'
+            root.style.opacity = '0'
+            setTimeout(() => {
+              document.body.innerHTML = ''
+              document.body.style.background = '#000'
+            }, 1600)
+          }
+        }, 800)
+      } else if (result.action === 'cmatrix') {
+        setLines(newLines)
+        setShowCmatrix(true)
       } else {
         const outputLines = result.output.map((text) => ({
           type: result.isError ? 'error' : 'output',
@@ -104,7 +201,8 @@ export default function Terminal() {
 
 // Terminal container — click anywhere to focus input, ref for auto-scroll
   return (
-    <div className="terminal" onClick={focusInput} ref={scrollRef}>
+    <div className="terminal" onClick={focusInput} ref={scrollRef} style={{ position: 'relative' }}>
+      {showCmatrix && <CmatrixOverlay onDone={() => setShowCmatrix(false)} />}
 
       {/* Render history: past commands and their output */}
       {lines.map((line, i) => (

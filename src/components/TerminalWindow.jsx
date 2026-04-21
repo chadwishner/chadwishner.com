@@ -148,7 +148,15 @@ export default function TerminalWindow() {
           <button
             className="traffic-light traffic-minimize"
             title="Minimize"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation()
+              setSize({ w: initialW, h: initialH })
+              setPos({
+                x: Math.max(0, (window.innerWidth - initialW) / 2),
+                y: Math.max(0, (window.innerHeight - initialH) / 2),
+              })
+              setIsMaximized(false)
+            }}
           >
             <svg viewBox="0 0 12 12" width="8" height="8">
               <line x1="1" y1="6" x2="11" y2="6" stroke="currentColor" strokeWidth="2" />

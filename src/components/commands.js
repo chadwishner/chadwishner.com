@@ -3,6 +3,9 @@
 // ============================================================
 
 import { formatResponse, styleText } from './formatter'
+
+const PAGE_LOAD_TIME = Date.now()
+
 import aboutData from '../responses/about'
 import skillsData from '../responses/skills'
 import experienceData from '../responses/experience'
@@ -160,6 +163,27 @@ const COMMANDS = {
     }),
   },
 
+  uptime: {
+    description: 'Show system uptime',
+    execute: () => {
+      const now = new Date()
+      const elapsed = Date.now() - PAGE_LOAD_TIME
+      const totalSec = Math.floor(elapsed / 1000)
+      const days = Math.floor(totalSec / 86400)
+      const hrs = Math.floor((totalSec % 86400) / 3600)
+      const mins = Math.floor((totalSec % 3600) / 60)
+      const timeStr = now.toTimeString().slice(0, 5)
+      const uptimeStr = days > 0
+        ? `${days} day${days !== 1 ? 's' : ''}, ${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}`
+        : `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}`
+      const users = Math.floor(Math.random() * 5) + 1
+      const load = () => (Math.random() * 10 + 1).toFixed(2)
+      return {
+        output: [`${timeStr}  up ${uptimeStr}, ${users} user${users !== 1 ? 's' : ''}, load averages: ${load()} ${load()} ${load()}`],
+      }
+    },
+  },
+
   whoami: {
     description: 'Display current user',
     execute: (args, visitor) => ({
@@ -304,6 +328,77 @@ const COMMANDS = {
         '<span class="warn">There is no escape. This is my website.</span>',
         'Try <span class="highlight">help</span> instead.',
       ],
+    }),
+  },
+
+  rm: {
+    description: 'Remove files',
+    execute: (args) => {
+      const joined = args.join(' ')
+      if (joined.includes('-rf') || joined.includes('-rf /') || joined.includes('-rf /*')) {
+        return {
+          output: [
+            '<span class="warn">rm: deleting everything...</span>',
+          ],
+          action: 'rmrf',
+        }
+      }
+      return {
+        output: ['rm: missing operand'],
+        isError: true,
+      }
+    },
+  },
+
+  sl: {
+    description: 'Steam locomotive',
+    execute: () => ({
+      output: [
+        '',
+        '<span class="dim">      ====        ________                ___________</span>',
+        '<span class="dim">  _D _|  |_______/        \\__I_I_____===__|_________|</span>',
+        '<span class="dim">   |(_)---  |   H\\________/ |   |        =|___ ___|</span>',
+        '<span class="dim">   /     |  |   H  |  |     |   |         ||_| |_||</span>',
+        '<span class="dim">  |      |  |   H  |__--------------------| [___] |</span>',
+        '<span class="dim">  | ________|___H__/__|_____/[][]~\\_______|       |</span>',
+        '<span class="dim">  |/ |   |-----------I_____I [][] []  D   |=======|__</span>',
+        '<span class="dim">__/ =| o |=-~~\\  /~~\\  /~~\\  /~~\\ ____Y___________|__</span>',
+        '<span class="dim"> |/-=|___|=    ||    ||    ||    |_____/~\\___/        </span>',
+        '<span class="dim">  \\_/      \\O=====O=====O=====O_/      \\_/            </span>',
+        '',
+        '<span class="warn">You meant ls, didn\'t you?</span>',
+        '',
+      ],
+    }),
+  },
+
+  cowsay: {
+    description: 'Cow says moo',
+    execute: (args) => {
+      const msg = args.length > 0 ? args.join(' ') : 'Hire Chad!'
+      const border = '-'.repeat(msg.length + 2)
+      return {
+        output: [
+          '',
+          ` ${border}`,
+          `< ${msg} >`,
+          ` ${border}`,
+          '        \\   ^__^',
+          '         \\  (oo)\\_______',
+          '            (__)\\       )\\/\\',
+          '                ||----w |',
+          '                ||     ||',
+          '',
+        ],
+      }
+    },
+  },
+
+  cmatrix: {
+    description: 'Matrix digital rain',
+    execute: () => ({
+      output: [],
+      action: 'cmatrix',
     }),
   },
 }
