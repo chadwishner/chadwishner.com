@@ -9,14 +9,24 @@ export default {
       tech: 'React + Vite',
     },
     {
-      name: 'Blade Coach',
-      description: 'An iOS app designed to help beginners learn how to roller skate!',
+      name: 'Wasatch Backcountry Skiing Map',
+      description: 'An iOS app designed for experienced backountry skiers to find and share information about ski routes in the Wasatch mountains.',
+      tech: 'SwiftUI, Objective-C, UIKit, Storyboards',
+    },
+    {
+      name: 'Stride',
+      description: 'An iOS app designed to help beginners learn how to inline roller skate!',
       tech: 'SwiftUI and Firebase',
     },
     {
       name: 'ChadGPT',
       description: "A spoof ChatGPT website where users think they're talking to an AI, but they're actually messaging a real human named Chad (me)!",
       tech: 'React, Tailwind CSS, and Next.js',
+    },
+    {
+      name: 'Auto GDPR Reject Safari Extension',
+      description: 'A Safari extension that automatically rejects GDPR consent requests. Available through homebrew tap.',
+      tech: 'SwiftUI, Javascript, homebrew',
     },
     {
       name: 'Smiths Mammoth Ticket Notifier',
